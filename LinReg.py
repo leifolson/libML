@@ -55,9 +55,14 @@ class LinReg:
         currCost = self.costF()
 
         for i in range(iters):
+            # compute difference between hypothesis output and target values
             h = np.dot(self.data,self.weights).T - self.targets
-            errTerm = (eta/self.nsamps) * np.dot(h,self.data).T
-            self.weights = self.weights - errTerm
+
+            # compute the adjustments to each weight
+            weightAdj = (eta/self.nsamps) * np.dot(h,self.data).T
+
+            # update the weights
+            self.weights = self.weights - weightAdj
 
 
     def costF(self):
