@@ -1,1 +1,2 @@
 # imports
+from LinReg import *
