@@ -1,2 +1,2 @@
 # libML
-A little Machine Learning library
+A little Python Machine Learning library
