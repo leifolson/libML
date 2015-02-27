@@ -48,7 +48,7 @@ class ANN:
         weights = {}
 
         # first generate input weights
-        wIn = np.random.rand(layers[0], self.nVars+1) * -0.1 - 0.05
+        wIn = np.random.rand(layers[0], self.nVars+1) * 0.1 - 0.05
         weights.update({0:wIn})        
          
         # now generate hidden weights

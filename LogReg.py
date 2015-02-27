@@ -41,7 +41,7 @@ class LogReg:
             This version of gradient descent is not normalized
         ''' 
         # initialize weights to small positive and negative values
-        self.weights = np.random.rand(1,self.nvars+1).T * -0.1 - 0.05
+        self.weights = np.random.rand(1,self.nvars+1).T * 0.1 - 0.05
 
         currCost = self.costF()
 
