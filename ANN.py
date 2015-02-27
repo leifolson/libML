@@ -7,6 +7,11 @@ Implements an Artificial Neural Network Class
 
 class ANN:
 
+    def __init__():
+        self.weights = None
+        self.data = None
+        
+
     def train():
 
 

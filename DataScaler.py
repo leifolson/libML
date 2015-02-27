@@ -17,7 +17,10 @@ class DataScaler:
     # range scaling
     # columns can be specified in the event that only certain variables
     # should be scaled or normalized
-    def rangeScale(self,cols):
+    def rangeScale(self,cols=[]):
+        if len(cols) == 0:
+            cols = range(self.data.shape[1])
+
         # get min/max values
         minVals = self.data[:,cols].min(axis=0)
         maxVals = self.data[:,cols].max(axis=0)
@@ -26,13 +29,16 @@ class DataScaler:
         rangeVals = maxVals - minVals
 
         # scale the features
-        return ((self.data[:,cols] - minVals) / float(rangeVals))
+        return ((self.data[:,cols] - minVals) / rangeVals)
 
         
 
     # zero mean, unit variance scaling
     # use cols to specify which columns in the array to normalize
-    def zeroMeanUVar(self,cols):
+    def zeroMeanUVar(self,cols=[]):
+        if len(cols) == 0:
+            cols = range(self.data.shape[1])
+
         return (self.data[:,cols] - self.data[:,cols].mean(axis=0)) / self.data[:,cols].var(axis=0)
 
 
