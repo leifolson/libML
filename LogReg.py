@@ -38,7 +38,7 @@ class LogReg:
 
     def gradDescent(self, eta, lamb, iters):
         '''
-            This version of gradient descent is not normalized
+            This version of gradient descent is not regularized
         ''' 
         # initialize weights to small positive and negative values
         self.weights = np.random.rand(1,self.nvars+1).T * 0.1 - 0.05
