@@ -18,6 +18,11 @@ class DataScaler:
     # columns can be specified in the event that only certain variables
     # should be scaled or normalized
     def rangeScale(self,cols=[]):
+        '''
+        Performs range scaling
+        Columns can be specified in the event that only certain variables
+        should be scaled or normalized
+        '''
         if len(cols) == 0:
             cols = range(self.data.shape[1])
 
