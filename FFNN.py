@@ -57,7 +57,7 @@ class FFNN:
         weights = {}
 
         # first generate input weights
-        wIn = np.random.rand(layers[0], self.nVars+1) * 0.1 - 0.05
+        wIn = np.random.rand(layers[0], self.numVars+1) * 0.1 - 0.05
         weights.update({0:wIn})        
          
         # now generate hidden weights
@@ -66,3 +66,14 @@ class FFNN:
             
             
         return weights
+    
+    def _getActivationFunc(self, type):
+        if type == 'linear':
+            def f(x):
+                return x
+            
+        elif type == 'logistic':
+            def f(x):
+                return 1 / (1 + np.exp(-x))
+            
+        return f
