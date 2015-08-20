@@ -6,6 +6,8 @@ LinReg implements simple multivariate linear regression
 '''
 import numpy as np
 
+
+# TODO: Revisit this class...possibly reimplement
 class LinReg:
 
     def __init__(self):

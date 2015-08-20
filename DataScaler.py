@@ -14,9 +14,6 @@ class DataScaler:
     def __init__(self,data):
         self.data = data
  
-    # range scaling
-    # columns can be specified in the event that only certain variables
-    # should be scaled or normalized
     def rangeScale(self,cols=[]):
         '''
         Performs range scaling

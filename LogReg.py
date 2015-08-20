@@ -8,6 +8,7 @@ Currently only does two-class logistic regression
 '''
 import numpy as np
 
+# TODO: Revisit this class...possibly reimplement
 class LogReg:
 
     def __init__(self):
