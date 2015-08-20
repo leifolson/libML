@@ -11,17 +11,22 @@ import numpy as np
 
 class FFNN:
     
-    def __init__(self, trainData, targets, layers):
+    def __init__(self, data, targets, layers, hiddenType = 'logistic', outType = 'logistic'):
         '''
         Inputs:
-            - trainData: numpy array of training data, samples in rows
-            - layers: list of hidden layer sizes in order from left to right
+            - data: numpy array of training data, samples in rows
+            - layers: list of layer sizes from left to right
+                      do not include input layer
             - targets: numpy array of target values
-
+            - hiddenType: type of hidden layer neurons
+                          possible values of linear or logistic currently
+            - outType: type of output layer neurons
         '''
-        self.data = trainData
+        self.data = data
         self.targets = targets
-        self.nSamps, self.nVars = trainData.shape
+        self.hiddenType = hiddenType
+        self.outType = outType
+        self.numEx, self.numVars = data.shape
         self.weights = self._initWeights(layers)
         
 
@@ -29,13 +34,16 @@ class FFNN:
         # TODO: implement
         return 
 
+    def predict(self):
+        # TODO: implement
+        return
 
-    def forwardProp(self):
+    def _forwardProp(self):
         # TODO: implement
         return
 
 
-    def backProp(self):
+    def _backProp(self):
         # TODO: implement
         return
 
