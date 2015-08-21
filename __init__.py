@@ -2,4 +2,4 @@
 from DataScaler import *
 from LinReg import *
 from LogReg import *
-from ANN import *
+from FFNN import *

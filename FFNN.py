@@ -77,7 +77,28 @@ class FFNN:
 
     def _backProp(self, activations, learningRate):
         # TODO: implement
-        return
+        
+        numLayers = len(self.layers)
+
+        # start at the output and propagate back
+        deltas = {}
+        
+        # compute output errors
+        actFuncDx = self._getActFuncDx(self.outType)
+        outputLayer = numLayers - 2
+        delta = (self.targets - activations[outputLayer]) * actFuncDx(activations[outputLayer]) 
+        deltas.update({outputLayer : delta})
+        
+        # compute the hidden layer errors
+        for i in reversed(range(numLayers - 2)):
+            actFuncDx = self._getActFuncDx(self.hiddenType)
+            weights = self.weights[i+1]
+            
+            # remember, we dont compute derivatives on bias nodes so we ignore those weights for now
+            delta = actFuncDx(activations[i]) * (np.dot(deltas[i+1], weights[:,1:]))
+            deltas.update({i : delta})
+            
+        return deltas
 
 
     def _initWeights(self, layers):
@@ -111,6 +132,22 @@ class FFNN:
             
         elif type == 'tanh':
             def f(x):
-                return ((np.exp(x) - np.exp(-x)) / np.exp(x) + np.exp(-x))
+                return np.tanh(x)
+            
+        return f
+    
+    
+    def _getActFuncDx(self, type):
+        if type == 'linear':
+            def f(x):
+                return 1
+            
+        elif type == 'logistic':
+            def f(x):
+                return x * (1 - x)
+            
+        elif type == 'tanh':
+            def f(x):
+                return (1 - np.tanh(x) ** 2)
             
         return f
