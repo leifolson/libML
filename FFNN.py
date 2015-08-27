@@ -28,10 +28,29 @@ class FFNN:
         self.numEx, self.numVars = data.shape
         self.layers = layers
         self.weights = self._initWeights(layers)
+        self.bestWeights = self.weights
         
 
-    def train(self):
+    def train(self, epochs, learningRate):
         # TODO: implement
+        
+        for i in range(epochs):
+            acts = self._forwardProp()
+            
+            # update weights
+            self._backProp(acts, learningRate)
+            
+            print self.weights
+            
+            print 'targets: ' , self.targets
+            print 'acts: ' , acts[len(self.layers) - 2]
+            print 'errors: ' , sum((self.targets - acts[len(self.layers) - 2])**2)
+            
+            idx = range(self.data.shape[0])
+            np.random.shuffle(idx)
+            self.data = self.data[idx,:]
+            self.targets = self.targets[idx, :]
+            
         return 
 
     def predict(self):
@@ -73,10 +92,15 @@ class FFNN:
                 neuralInput = np.dot(acts, self.weights[i + 1].T)
         
         return activations
-
+        
 
     def _backProp(self, activations, learningRate):
-        # TODO: implement
+        '''
+        Runs backpropagation for the Neural Network.
+        Requires the activations dictionary for each layer.
+        
+        Also updates network weights
+        '''
         
         numLayers = len(self.layers)
 
@@ -98,7 +122,32 @@ class FFNN:
             delta = actFuncDx(activations[i]) * (np.dot(deltas[i+1], weights[:,1:]))
             deltas.update({i : delta})
             
-        return deltas
+            
+        # update the weights
+        self._updateWeights(activations, deltas, learningRate)
+        
+        return
+    
+    
+    def _updateWeights(self, activations, deltas, learnRate):
+        # TODO: Implement
+     
+        # update input weights
+        inputUpdate = np.zeros(self.weights[0].shape)
+        inputWithBias = np.insert(self.data, 0, 1, axis = 1)
+        inputUpdate = learnRate * np.dot(deltas[0].T, inputWithBias)
+        
+        self.weights[0] += inputUpdate
+        
+        # now update the other weights
+        for i in range(len(self.layers) - 2):
+            act = activations[i]
+            act = np.insert(act, 0, 1, axis = 1)
+
+            update = learnRate * np.dot(deltas[i+1].T, act)
+            self.weights[i + 1] += update
+        
+        return
 
 
     def _initWeights(self, layers):
