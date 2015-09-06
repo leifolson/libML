@@ -32,8 +32,16 @@ class FFNN:
         self.bias = bias
         
 
-    def train(self, epochs, learningRate, randomRestarts = 5):
-        # TODO: implement
+    def train(self, epochs, learningRate, randomRestarts = 5, verbose = False):
+        '''
+        Trains an instantiated network
+        Total forward iterations of training will be randomRestarts*epochs iterations
+        
+        epochs: number of iterations to train
+        learningRate: the learning rate parameter to be used for weight updates
+        randomRestarts: the number of times to run the network with a new set of randomly initialized weights
+        verbose: boolean parameter to turn on/off reporting of targets, activations, and errors for each epoch
+        '''
         bestError = 99999
         bestWeights = self.weights
         
@@ -42,15 +50,17 @@ class FFNN:
             self.weights = self._initWeights(self.layers)
             
             for i in range(epochs):
-                acts = self._forwardProp()
+                acts = self._forwardProp(self.data)
                 
                 # update weights
                 self._backProp(acts, learningRate)
                 
                 error = sum((self.targets - acts[len(self.layers) - 2])**2)
-                print 'targets: ' , self.targets
-                print 'acts: ' , acts[len(self.layers) - 2]
-                print 'errors: ' , error
+                
+                if verbose:
+                    print 'targets: ' , self.targets
+                    print 'acts: ' , acts[len(self.layers) - 2]
+                    print 'errors: ' , error
                 
                 if error < bestError:
                     bestError = error
@@ -62,15 +72,32 @@ class FFNN:
                 self.targets = self.targets[idx, :]
             
         self.weights = bestWeights.copy()
-        print 'best error: ', bestError
+        print 'Minimum error over all epochs: ', bestError
         
         return 
 
-    def predict(self):
-        # TODO: implement
-        return
+    def predict(self, data):
+        '''
+        Predicts the class of the passed in data
+        using the trained network weights.
+        
+        data: a numpy array of data to predict.
+        '''
+        
+        # run through forward prop to get results
+        results = self._forwardProp(data)
+        
+        # compute output layer index
+        outputLayer = len(self.layers) - 2
+        
+        # get the appropriate output thresholding function
+        outputFunc = self._getOutputFunc(self.outType)
+        
+        # return the results as a numpy array
+        return outputFunc(results[outputLayer])
+    
 
-    def _forwardProp(self):
+    def _forwardProp(self, data):
         '''
         Forward propagates through the network, returning a dictionary
         of activations for each layer of the network.
@@ -86,7 +113,7 @@ class FFNN:
         h = self._getActivationFunc(self.hiddenType)
         
         # add bias to input
-        trainEx = np.insert(self.data.copy(), 0, self.bias, axis = 1)
+        trainEx = np.insert(data.copy(), 0, self.bias, axis = 1)
         
         # compute input to first layer
         neuralInput = np.dot(trainEx, self.weights[0].T)
@@ -151,8 +178,10 @@ class FFNN:
     
     
     def _updateWeights(self, activations, deltas, learnRate):
-        # TODO: Implement
-     
+        '''
+        Updates the weight matrix according to the error terms and the
+        specified learning rate
+        '''
         # update input weights
         inputUpdate = np.zeros(self.weights[0].shape)
         inputWithBias = np.insert(self.data, 0, self.bias, axis = 1)
@@ -226,3 +255,17 @@ class FFNN:
                 return (1 - np.tanh(x) ** 2)
             
         return f
+    
+    def _getOutputFunc(self, type):
+        if type == 'linear':
+            def f(x):
+                return x
+        elif type == 'logistic':
+            def f(x):
+                return np.where(x < 0.5, 0, 1)
+        elif type == 'tanh':
+            def f(x):
+                return np.where(x < 0, 0, 1)
+                
+        return f
+            
